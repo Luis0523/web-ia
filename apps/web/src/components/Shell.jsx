@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import Brand from './Brand.jsx';
 
 const linkClass = ({ isActive }) => `nav-link${isActive ? ' active' : ''}`;
 
@@ -15,18 +16,12 @@ export default function Shell() {
   return (
     <div className="shell">
       <aside className="sidebar">
-        <div className="brand">
-          <div className="logo">IA</div>
-          <div>
-            <strong>Web IA</strong>
-            <small>Turismo inteligente</small>
-          </div>
-        </div>
+        <Brand />
 
         <nav className="nav-group">
           <div className="nav-title">Servicios de IA</div>
           <NavLink to="/" end className={linkClass}>
-            Panel
+            Inicio
           </NavLink>
           <NavLink to="/chat" className={linkClass}>
             Chatbot con RAG

@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { api } from '../api/client.js';
 
 const suggestions = [
@@ -163,7 +165,13 @@ export default function Chat() {
 
             {messages.map((message, index) => (
               <div key={index} className={`msg ${message.role}`}>
-                {message.content}
+                {message.role === 'assistant' ? (
+                  <div className="md">
+                    <Markdown remarkPlugins={[remarkGfm]}>{message.content}</Markdown>
+                  </div>
+                ) : (
+                  message.content
+                )}
                 {message.sources?.length > 0 && (
                   <div className="sources">
                     {message.sources.map((source, sourceIndex) => (

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -108,8 +110,8 @@ export default function AgentPage({ mode }) {
               <h3 style={{ margin: 0 }}>Respuesta del agente</h3>
               <span className="badge ok">{result.tokens?.used} tokens</span>
             </div>
-            <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.7, marginTop: 14 }}>
-              {result.output}
+            <div className="md" style={{ marginTop: 14 }}>
+              <Markdown remarkPlugins={[remarkGfm]}>{result.output}</Markdown>
             </div>
             <p className="muted" style={{ marginBottom: 0, fontSize: 13 }}>
               Herramientas usadas: {result.toolsUsed?.join(', ') || 'ninguna'} · Tokens restantes:{' '}

@@ -20,15 +20,30 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="page-head">
-        <div>
+      <section className="hero">
+        <div className="hero-copy">
+          <span className="hero-kicker">Tu proximo viaje empieza aqui</span>
           <h1>Hola, {user?.name}</h1>
-          <p>Consulta el estado de tus servicios de IA y tu consumo del mes.</p>
+          <p>Consulta destinos, arma itinerarios y ajusta tu presupuesto con asistencia de IA.</p>
+          <div className="hero-actions">
+            <Link className="btn primary" to="/chat">
+              Preguntar al asistente
+            </Link>
+            <Link className="btn ghost" to="/itinerary">
+              Planificar viaje
+            </Link>
+          </div>
         </div>
-        <Link className="btn primary" to="/chat">
-          Abrir chatbot
-        </Link>
-      </div>
+        <div className="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 340 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="262" cy="46" r="22" className="sun" />
+            <path d="M0 148 62 74l42 48 34-38 58 64H0Z" className="mountain-back" />
+            <path d="M96 156 176 58l56 68 30-30 58 60H96Z" className="mountain-front" />
+            <path d="M0 158c34-10 58-10 92 0s58 10 92 0 58-10 92 0 42 7 64 2" className="wave" />
+            <path d="M0 170c34-10 58-10 92 0s58 10 92 0 58-10 92 0 42 7 64 2" className="wave wave-2" />
+          </svg>
+        </div>
+      </section>
 
       {error && <div className="alert error">{error}</div>}
 

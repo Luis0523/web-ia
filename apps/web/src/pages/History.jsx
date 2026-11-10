@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { api } from '../api/client.js';
 
 export default function History() {
@@ -117,7 +119,13 @@ export default function History() {
             <div className="messages" style={{ maxHeight: '60vh' }}>
               {messages.map((message) => (
                 <div key={message.id} className={`msg ${message.role}`}>
-                  {message.content}
+                  {message.role === 'assistant' ? (
+                    <div className="md">
+                      <Markdown remarkPlugins={[remarkGfm]}>{message.content}</Markdown>
+                    </div>
+                  ) : (
+                    message.content
+                  )}
                   <div className="meta">{message.tokens} tokens</div>
                 </div>
               ))}

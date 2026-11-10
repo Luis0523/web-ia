@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import Brand from '../components/Brand.jsx';
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -29,13 +30,7 @@ export default function Login() {
   return (
     <div className="login-wrap">
       <form className="login-card" onSubmit={submit}>
-        <div className="brand" style={{ padding: 0, marginBottom: 18 }}>
-          <div className="logo">IA</div>
-          <div>
-            <strong>Web IA</strong>
-            <small>Turismo inteligente</small>
-          </div>
-        </div>
+        <Brand />
         <h1>Iniciar sesion</h1>
         <p className="sub">Chatbot con RAG y agentes de viaje multi-paso.</p>
 
