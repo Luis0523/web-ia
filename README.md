@@ -144,6 +144,8 @@ El auto-deploy de Render esta **desactivado** a proposito. El workflow `.github/
 
 Sin esos secrets el pipeline valida pero no despliega.
 
+En este repositorio ya estan configurados `RENDER_API_KEY` y `RENDER_SERVICE_ID` como **Repository secrets**, por lo que cada push a `main` que pase las pruebas dispara un deploy en Render.
+
 ## Power BI
 
 El endpoint `GET /api/bi/usage?from=YYYY-MM-DD&to=YYYY-MM-DD&service=rag_chat` devuelve el mismo reporte agregado que la web (totales, por servicio, diario y por usuario). Se autentica con la cabecera `x-api-key`.
