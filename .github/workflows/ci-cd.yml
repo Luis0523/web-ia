@@ -53,8 +53,10 @@ jobs:
             exit 0
           fi
 
-          KEY=$(printf '%s' "$RENDER_API_KEY" | tr -d '[:space:]')
-          SID=$(printf '%s' "$RENDER_SERVICE_ID" | tr -d '[:space:]')
+          KEY=$(printf '%s' "$RENDER_API_KEY" | tr -d '[:space:]"'\''' )
+          KEY=${KEY#Bearer}
+          KEY=${KEY#bearer}
+          SID=$(printf '%s' "$RENDER_SERVICE_ID" | tr -d '[:space:]"'\''')
 
           CODE=$(curl -sS -o /tmp/render-deploy.json -w '%{http_code}' \
             -X POST "https://api.render.com/v1/services/$SID/deploys" \
