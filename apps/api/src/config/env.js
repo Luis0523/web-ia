@@ -25,7 +25,7 @@ export const env = {
   embeddingModel: process.env.EMBEDDING_MODEL || 'text-embedding-3-small',
   embeddingDim: num(process.env.EMBEDDING_DIM, 1536),
   biApiKey: process.env.BI_API_KEY || 'demo-bi-key-123',
-  ragMinScore: num(process.env.RAG_MIN_SCORE, 0.68),
+  ragMinScore: num(process.env.RAG_MIN_SCORE, 0.45),
   ragTopK: num(process.env.RAG_TOP_K, 5),
   mockAi: process.env.MOCK_AI === 'true',
 };

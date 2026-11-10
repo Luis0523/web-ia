@@ -130,12 +130,15 @@ export const retrieve = async (question, options = {}) => {
   if (localMode) return lexicalRetrieve(question, topK, minScore);
 
   try {
-    return await vectorRetrieve(question, topK, minScore);
+    const results = await vectorRetrieve(question, topK, minScore);
+    if (results.length > 0) return results;
   } catch (error) {
     embeddingsUnavailable = true;
     console.warn(`Embeddings no disponibles (${error.message}). Se usa recuperacion lexica BM25.`);
-    return lexicalRetrieve(question, topK, minScore);
   }
+
+  // Si el proveedor falla o ningun chunk supera el umbral, se complementa con BM25.
+  return lexicalRetrieve(question, topK, minScore);
 };
 
 export const indexDocument = async (documentId) => {

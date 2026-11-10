@@ -31,7 +31,7 @@ services:
       - key: BI_API_KEY
         sync: false
       - key: RAG_MIN_SCORE
-        value: "0.68"
+        value: "0.45"
       - key: RAG_TOP_K
         value: "5"
 
