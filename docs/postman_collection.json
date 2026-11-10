@@ -1,0 +1,148 @@
+{
+  "info": {
+    "name": "Web IA - Turismo",
+    "description": "Coleccion de consumo externo de la API (chat RAG, agentes, historial, consumo y BI).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" },
+    { "key": "apiKey", "value": "demo-bi-key-123" },
+    { "key": "conversationId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.token) { pm.collectionVariables.set('token', data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@webia.test\",\n  \"password\": \"User123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chatbot RAG",
+      "item": [
+        {
+          "name": "Preguntar",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/chat",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Que actividades hay en Cartagena y cuanto cuestan?\",\n  \"conversationId\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "Conversaciones",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/chat/conversations"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agentes",
+      "item": [
+        {
+          "name": "Itinerario",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/agents/itinerary",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": \"Arma un itinerario de 4 dias en Cartagena con presupuesto 2000 USD\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Ajustar viaje",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/agents/adjust",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": \"Mi presupuesto bajo a 1200 USD y quiero evitar lluvias\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consumo",
+      "item": [
+        {
+          "name": "Mi consumo",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/usage/me"
+          }
+        },
+        {
+          "name": "Reporte general (admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/usage/admin/usage?from=2026-11-01&to=2026-11-30"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Power BI",
+      "item": [
+        {
+          "name": "Reporte BI por API key",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/bi/usage?from=2026-11-01&to=2026-11-30"
+          }
+        }
+      ]
+    }
+  ]
+}

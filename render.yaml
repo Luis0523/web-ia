@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: web-ia
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: web-ia-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: GROQ_FAST_MODEL
+        value: openai/gpt-oss-20b
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: EMBEDDING_MODEL
+        value: text-embedding-3-small
+      - key: EMBEDDING_DIM
+        value: "1536"
+      - key: BI_API_KEY
+        sync: false
+      - key: RAG_MIN_SCORE
+        value: "0.68"
+      - key: RAG_TOP_K
+        value: "5"
+
+databases:
+  - name: web-ia-db
+    plan: free
+    databaseName: webia
+    postgresMajorVersion: "16"
+    region: oregon

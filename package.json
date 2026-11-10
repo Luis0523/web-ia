@@ -1,0 +1,24 @@
+{
+  "name": "web-ia",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Plataforma de servicios de IA para turismo: chatbot RAG y agentes multi-paso",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm --workspace apps/api run dev",
+    "dev:web": "npm --workspace apps/web run dev",
+    "build": "npm --workspace apps/web run build",
+    "start": "npm --workspace apps/api run start",
+    "test": "npm --workspace apps/api run test",
+    "lint": "npm --workspace apps/api run lint",
+    "db:setup": "psql \"$DATABASE_URL\" -f db/schema.sql && psql \"$DATABASE_URL\" -f db/seed.sql",
+    "index:docs": "npm --workspace apps/api run index"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
