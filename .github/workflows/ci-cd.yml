@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   test:
     name: Lint, tests y build
@@ -56,7 +60,7 @@ jobs:
             -X POST "https://api.render.com/v1/services/$SID/deploys" \
             -H "Authorization: Bearer $KEY" \
             -H "Content-Type: application/json" \
-            -d '{"clearCache":"do_not_clear"}')
+            -d '{"clearCache":"do_not_clear"}') || CODE="000"
 
           echo "Render HTTP $CODE"
           cat /tmp/render-deploy.json || true
@@ -68,13 +72,28 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
-          if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 300 ]; then
+          if [ -n "$CODE" ] && [ "$CODE" -ge 200 ] && [ "$CODE" -lt 300 ]; then
+            STATE="success"
+          else
+            STATE="failure"
+          fi
+
+          DETAIL=$(head -c 100 /tmp/render-deploy.json 2>/dev/null | tr '\n' ' ' | tr -d '"')
+          jq -n --arg state "$STATE" --arg desc "HTTP $CODE $DETAIL" \
+            '{state:$state, context:"render-deploy", description:($desc[0:135])}' > /tmp/status.json
+          curl -s -o /dev/null -X POST "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            --data @/tmp/status.json || true
+
+          if [ "$STATE" = "success" ]; then
             echo "Deploy solicitado via Render API"
           else
-            echo "Render rechazo el deploy"
+            echo "Render rechazo el deploy (HTTP $CODE)"
             exit 1
           fi
         env:
+          GH_TOKEN: ${{ github.token }}
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
