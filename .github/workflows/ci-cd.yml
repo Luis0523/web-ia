@@ -81,7 +81,7 @@ jobs:
           fi
 
           DETAIL=$(head -c 100 /tmp/render-deploy.json 2>/dev/null | tr '\n' ' ' | tr -d '"')
-          jq -n --arg state "$STATE" --arg desc "HTTP $CODE $DETAIL" \
+          jq -n --arg state "$STATE" --arg desc "HTTP $CODE keylen=${#KEY} $DETAIL" \
             '{state:$state, context:"render-deploy", description:($desc[0:135])}' > /tmp/status.json
           curl -s -o /dev/null -X POST "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
             -H "Authorization: Bearer $GH_TOKEN" \
