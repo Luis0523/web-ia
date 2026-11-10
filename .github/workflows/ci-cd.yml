@@ -41,14 +41,38 @@ jobs:
           if [ -n "$RENDER_DEPLOY_HOOK" ]; then
             curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
             echo "Deploy solicitado via deploy hook"
-          elif [ -n "$RENDER_API_KEY" ] && [ -n "$RENDER_SERVICE_ID" ]; then
-            curl -fsS -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
-              -H "Authorization: Bearer $RENDER_API_KEY" \
-              -H "Content-Type: application/json" \
-              -d '{"clearCache":"do_not_clear"}'
+            exit 0
+          fi
+
+          if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_SERVICE_ID" ]; then
+            echo "Sin credenciales de Render; se omite el deploy"
+            exit 0
+          fi
+
+          KEY=$(printf '%s' "$RENDER_API_KEY" | tr -d '[:space:]')
+          SID=$(printf '%s' "$RENDER_SERVICE_ID" | tr -d '[:space:]')
+
+          CODE=$(curl -sS -o /tmp/render-deploy.json -w '%{http_code}' \
+            -X POST "https://api.render.com/v1/services/$SID/deploys" \
+            -H "Authorization: Bearer $KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache":"do_not_clear"}')
+
+          echo "Render HTTP $CODE"
+          cat /tmp/render-deploy.json || true
+          {
+            echo "### Deploy en Render"
+            echo "- HTTP: \`$CODE\`"
+            echo '```json'
+            cat /tmp/render-deploy.json 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 300 ]; then
             echo "Deploy solicitado via Render API"
           else
-            echo "Sin credenciales de Render; se omite el deploy"
+            echo "Render rechazo el deploy"
+            exit 1
           fi
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
