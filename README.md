@@ -144,7 +144,7 @@ El auto-deploy de Render esta **desactivado** a proposito. El workflow `.github/
 
 Sin esos secrets el pipeline valida pero no despliega.
 
-En este repositorio ya estan configurados `RENDER_API_KEY` y `RENDER_SERVICE_ID` como **Repository secrets**, por lo que cada push a `main` que pase las pruebas dispara un deploy en Render.
+En este repositorio ya estan configurados `RENDER_API_KEY` y `RENDER_SERVICE_ID` como **Repository secrets**, por lo que cada push a `main` que pase las pruebas dispara un deploy en Render. El resultado del deploy se publica como *commit status* `render-deploy` (visible en la lista de commits) con el codigo HTTP devuelto por Render.
 
 ## Power BI
 
