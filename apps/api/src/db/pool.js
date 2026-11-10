@@ -3,8 +3,11 @@ import { env } from '../config/env.js';
 
 const { Pool } = pg;
 
+// Render expone una URL interna sin SSL y una externa con SSL.
+// Solo activamos TLS cuando la cadena lo exige o apunta al host publico.
 const useSsl =
-  env.nodeEnv === 'production' && !env.databaseUrl.includes('localhost');
+  !env.databaseUrl.includes('localhost') &&
+  (env.databaseUrl.includes('sslmode=require') || /\.render\.com/.test(env.databaseUrl));
 
 export const pool = new Pool({
   connectionString: env.databaseUrl,
