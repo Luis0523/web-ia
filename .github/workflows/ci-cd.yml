@@ -36,13 +36,21 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Disparar deploy hook de Render
+      - name: Desplegar en Render
         run: |
           if [ -n "$RENDER_DEPLOY_HOOK" ]; then
             curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
-            echo "Deploy solicitado a Render"
+            echo "Deploy solicitado via deploy hook"
+          elif [ -n "$RENDER_API_KEY" ] && [ -n "$RENDER_SERVICE_ID" ]; then
+            curl -fsS -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
+              -H "Authorization: Bearer $RENDER_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d '{"clearCache":"do_not_clear"}'
+            echo "Deploy solicitado via Render API"
           else
-            echo "RENDER_DEPLOY_HOOK no configurado; se omite el deploy"
+            echo "Sin credenciales de Render; se omite el deploy"
           fi
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}

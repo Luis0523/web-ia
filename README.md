@@ -2,6 +2,19 @@
 
 Aplicacion web con autenticacion, chatbot con RAG y dos agentes multi-paso para planificar viajes. Incluye historial de conversaciones, control de consumo de tokens, API REST documentada con Swagger, endpoint para Power BI, pruebas automatizadas y CI/CD.
 
+## Aplicacion desplegada
+
+| Recurso | URL |
+| --- | --- |
+| Web + API | https://web-ia-pom9.onrender.com |
+| Swagger | https://web-ia-pom9.onrender.com/api-docs |
+| Reporte BI | `GET https://web-ia-pom9.onrender.com/api/bi/usage` + header `x-api-key: demo-bi-key-123` |
+| Repositorio | https://github.com/Luis0523/web-ia |
+
+Cuentas demo: `admin@webia.test` / `Admin123!` y `demo@webia.test` / `User123!`.
+
+> El plan gratuito de Render suspende la instancia por inactividad; la primera peticion puede tardar ~30 s.
+
 ## Stack
 
 | Capa | Tecnologia |
@@ -110,24 +123,26 @@ npm run build   # build de React
 
 Cubren: login y roles, bloqueo por limite de tokens, recuperacion RAG, registro de historial, calculo de consumo/agregacion, agentes con herramientas y proteccion del endpoint BI.
 
-## Despliegue en Render
+## Despliegue en Render (ya realizado)
 
-1. Crear un Blueprint con `render.yaml` (servicio web + PostgreSQL con pgvector).
-2. Configurar en Render las variables: `GROQ_API_KEY`, `OPENAI_API_KEY`, `BI_API_KEY`. `JWT_SECRET` y `DATABASE_URL` se generan automaticamente.
-3. Inicializar la base de datos remota desde local:
+- Servicio web `web-ia` (`srv-dbp91uon74is73d8bvn0`), region Oregon, plan free. Construye React y lo sirve junto con la API en un solo dominio.
+- PostgreSQL 16 + pgvector `web-ia-db` (`dpg-dbp90nutlv9c73esqj9g-a`), creado via API. La API usa la **URL interna**; el acceso externo quedo deshabilitado.
+- Variables: `DATABASE_URL`, `JWT_SECRET`, `GROQ_API_KEY`, `GROQ_MODEL`, `OPENAI_API_KEY`, `BI_API_KEY`, `RAG_*`, `EMBEDDING_*`.
+- Build: `npm ci --include=dev && npm run build` · Start: `npm start` · Health: `/api/health`.
+- La base se inicializo con `schema.sql`, `seed.sql` y la indexacion del corpus.
 
-```bash
-export DATABASE_URL="postgres://...render.com/webia?sslmode=require"
-npm run db:setup
-npm run index:docs
-```
+### Reindexar el corpus
 
-4. El servicio construye React y lo sirve junto con la API en un solo dominio.
-5. Crear el secret `RENDER_DEPLOY_HOOK` en GitHub para el deploy automatico.
+Si agregas creditos de OpenAI, entra como administrador a **Documentos RAG → Reindexar todo**. La instancia ya tiene `OPENAI_API_KEY`; mientras no haya creditos el sistema usa BM25 y ese boton regenera los embeddings vectoriales.
 
-## CI/CD
+### CI/CD (deploy solo si las pruebas pasan)
 
-`.github/workflows/ci-cd.yml` se ejecuta en cada push/PR a `main`: instala dependencias, valida sintaxis, ejecuta pruebas, construye el frontend y, solo si todo pasa en `main`, dispara el deploy hook de Render.
+El auto-deploy de Render esta **desactivado** a proposito. El workflow `.github/workflows/ci-cd.yml` ejecuta lint, pruebas y build en cada push/PR a `main`; solo si todo pasa dispara el deploy. Configura en GitHub (Settings → Secrets and variables → Actions) una de estas opciones:
+
+- `RENDER_API_KEY` + `RENDER_SERVICE_ID` = `srv-dbp91uon74is73d8bvn0`, o
+- `RENDER_DEPLOY_HOOK` (Render → servicio → Settings → Deploy Hook).
+
+Sin esos secrets el pipeline valida pero no despliega.
 
 ## Power BI
 
@@ -137,11 +152,11 @@ Ejemplo en Power Query (M):
 
 ```m
 let
-  Url = "https://TU-SERVICIO.onrender.com/api/bi/usage",
+  Url = "https://web-ia-pom9.onrender.com/api/bi/usage",
   Source = Json.Document(
     Web.Contents(Url, [
       Query = [from = "2026-11-01", to = "2026-11-30", service = "rag_chat"],
-      Headers = [#"x-api-key" = "TU_BI_API_KEY"]
+      Headers = [#"x-api-key" = "demo-bi-key-123"]
     ])
   ),
   byService = Source[byService],
@@ -157,6 +172,6 @@ Usar `byService` para el grafico de tokens por servicio y `daily` para la serie 
 
 ## Notas tecnicas
 
-- **Groq no ofrece embeddings.** Por eso se usa OpenAI para indexar y consultar el corpus. Si no hay `OPENAI_API_KEY`, el sistema usa busqueda lexica BM25 local para que la demo siga funcionando.
-- El plan gratuito de PostgreSQL en Render **expira a los 30 dias**; para conservar la app mas alla, usar un plan pago o re-sembrar la base.
+- **Groq no ofrece embeddings.** Se usa OpenAI para indexar y consultar el corpus. La cuenta de OpenAI entregada **no tiene creditos**, por lo que en produccion el RAG opera con busqueda lexica BM25 (mismo endpoint y fuentes). Al agregar creditos, reindexar desde el panel admin.
+- El plan gratuito de PostgreSQL en Render **expira el 10 de diciembre de 2026**; para conservar la app mas alla, usar un plan pago o re-sembrar la base.
 - El seed crea 8 destinos, 24 actividades, 10 documentos RAG y 3 servicios de IA.
