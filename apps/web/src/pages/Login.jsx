@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import Brand from '../components/Brand.jsx';
+import ThemeToggle from '../components/ThemeToggle.jsx';
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -30,6 +31,9 @@ export default function Login() {
   return (
     <div className="login-wrap">
       <form className="login-card" onSubmit={submit}>
+        <div className="login-theme">
+          <ThemeToggle />
+        </div>
         <Brand />
         <span className="badge admin" style={{ marginBottom: 12 }}>
           Plataforma RAG + Agentes

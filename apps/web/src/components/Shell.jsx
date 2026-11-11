@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../api/client.js';
 import Brand from './Brand.jsx';
 import Icon from './Icon.jsx';
+import ThemeToggle from './ThemeToggle.jsx';
 
 const linkClass = ({ isActive }) => `nav-link${isActive ? ' active' : ''}`;
 
@@ -154,6 +155,7 @@ export default function Shell() {
             <strong>{section}</strong>
           </div>
           <div className="topbar-right">
+            <ThemeToggle showLabel />
             <span className="status-pill">
               <span className="dot" />
               RAG activo
