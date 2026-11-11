@@ -16,6 +16,7 @@
     "test": "npm --workspace apps/api run test",
     "lint": "npm --workspace apps/api run lint",
     "db:setup": "psql \"$DATABASE_URL\" -f db/schema.sql && psql \"$DATABASE_URL\" -f db/seed.sql",
+    "db:seed-history": "psql \"$DATABASE_URL\" -f db/seed_history.sql",
     "index:docs": "npm --workspace apps/api run index"
   },
   "engines": {
