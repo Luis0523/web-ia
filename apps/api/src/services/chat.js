@@ -33,12 +33,16 @@ export const handleChat = async ({ user, service, message, conversationId }) => 
   }
 
   const chunks = await retrieve(message);
-  const sources = chunks.map((chunk) => ({
-    title: chunk.title,
-    source: chunk.source,
-    category: chunk.category,
-    score: Number(chunk.score.toFixed(3)),
-  }));
+  const sources = chunks.map((chunk) => {
+    const content = String(chunk.content || '');
+    return {
+      title: chunk.title,
+      source: chunk.source,
+      category: chunk.category,
+      score: Number(Number(chunk.score).toFixed(3)),
+      snippet: content.length > 260 ? `${content.slice(0, 260)}...` : content,
+    };
+  });
 
   let answer;
   let tokensIn = estimateTokens(message);

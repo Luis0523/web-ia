@@ -173,13 +173,39 @@ export default function Chat() {
                   message.content
                 )}
                 {message.sources?.length > 0 && (
-                  <div className="sources">
-                    {message.sources.map((source, sourceIndex) => (
-                      <span key={sourceIndex} className="source-pill">
-                        {source.title} ({source.score})
-                      </span>
-                    ))}
-                  </div>
+                  <>
+                    <div className="sources">
+                      {message.sources.map((source, sourceIndex) => (
+                        <span key={sourceIndex} className="source-pill">
+                          {source.title} · similitud {source.score}
+                        </span>
+                      ))}
+                    </div>
+                    <details className="rag-details">
+                      <summary>
+                        Ver contexto recuperado ({message.sources.length}{' '}
+                        {message.sources.length === 1 ? 'fragmento' : 'fragmentos'})
+                      </summary>
+                      <p className="rag-note">
+                        Estos son los fragmentos de la base de datos que se enviaron al modelo como
+                        contexto para responder.
+                      </p>
+                      {message.sources.map((source, sourceIndex) => (
+                        <div className="rag-source" key={sourceIndex}>
+                          <div className="rag-source-head">
+                            <strong>
+                              {sourceIndex + 1}. {source.title}
+                            </strong>
+                            <span className="badge">similitud {source.score}</span>
+                          </div>
+                          <p>{source.snippet}</p>
+                          <small className="muted">
+                            {source.source} · {source.category}
+                          </small>
+                        </div>
+                      ))}
+                    </details>
+                  </>
                 )}
                 {message.tokens && (
                   <div className="meta">

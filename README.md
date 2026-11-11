@@ -13,7 +13,7 @@ Aplicacion web con autenticacion, chatbot con RAG y dos agentes multi-paso para 
 
 Cuentas demo: `admin@webia.test` / `Admin123!` y `demo@webia.test` / `User123!`.
 
-Contexto completo para continuar el proyecto en otro equipo (Windows): [`docs/HANDOFF_WINDOWS.md`](docs/HANDOFF_WINDOWS.md).
+Contexto completo para continuar el proyecto en otro equipo (Windows): [`docs/HANDOFF_WINDOWS.md`](docs/HANDOFF_WINDOWS.md). Guion para explicar y demostrar el RAG: [`docs/DEMO_RAG.md`](docs/DEMO_RAG.md).
 
 > El plan gratuito de Render suspende la instancia por inactividad; la primera peticion puede tardar ~30 s.
 
