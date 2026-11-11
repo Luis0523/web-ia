@@ -2,25 +2,33 @@ export default function Brand() {
   return (
     <div className="brand">
       <div className="logo" aria-hidden="true">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="23" cy="9" r="3.2" fill="currentColor" opacity="0.9" />
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M3 24.5 11 13l5 6.6L20.5 13 29 24.5"
+            d="M3 21h18M5 21V11l7-7 7 7v10"
             stroke="currentColor"
-            strokeWidth="2.2"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
-            d="M3 24.5h26"
+            d="M9 21v-9h6v9"
             stroke="currentColor"
-            strokeWidth="2.2"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M12 4V2"
+            stroke="#bbf7d0"
+            strokeWidth="2.4"
             strokeLinecap="round"
           />
         </svg>
       </div>
       <div>
-        <strong>Web IA</strong>
+        <strong>
+          Web<span>IA</span>
+        </strong>
         <small>Turismo inteligente</small>
       </div>
     </div>

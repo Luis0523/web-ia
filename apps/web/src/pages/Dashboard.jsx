@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import Icon from '../components/Icon.jsx';
 
 export default function Dashboard() {
   const { user, isAdmin } = useAuth();
@@ -27,9 +28,11 @@ export default function Dashboard() {
           <p>Consulta destinos, arma itinerarios y ajusta tu presupuesto con asistencia de IA.</p>
           <div className="hero-actions">
             <Link className="btn primary" to="/chat">
+              <Icon name="chat" className="icon-sm" />
               Preguntar al asistente
             </Link>
             <Link className="btn ghost" to="/itinerary">
+              <Icon name="route" className="icon-sm" />
               Planificar viaje
             </Link>
           </div>
@@ -80,15 +83,24 @@ export default function Dashboard() {
           <h3 style={{ marginTop: 0 }}>Servicios disponibles</h3>
           <div className="grid" style={{ gap: 10 }}>
             <Link className="conv-item" to="/chat">
-              <strong>Chatbot con RAG</strong>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Icon name="chat" className="icon-sm" />
+                <strong>Chatbot con RAG</strong>
+              </span>
               <small>Preguntas sobre destinos, actividades, clima y presupuesto.</small>
             </Link>
             <Link className="conv-item" to="/itinerary">
-              <strong>Planificador de itinerario</strong>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Icon name="route" className="icon-sm" />
+                <strong>Planificador de itinerario</strong>
+              </span>
               <small>Busca destinos, clima y distancias para armar un plan.</small>
             </Link>
             <Link className="conv-item" to="/adjust">
-              <strong>Ajustar viaje</strong>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Icon name="sliders" className="icon-sm" />
+                <strong>Ajustar viaje</strong>
+              </span>
               <small>Recalcula el plan ante cambios de presupuesto o clima.</small>
             </Link>
           </div>

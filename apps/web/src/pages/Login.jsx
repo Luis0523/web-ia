@@ -31,6 +31,9 @@ export default function Login() {
     <div className="login-wrap">
       <form className="login-card" onSubmit={submit}>
         <Brand />
+        <span className="badge admin" style={{ marginBottom: 12 }}>
+          Plataforma RAG + Agentes
+        </span>
         <h1>Iniciar sesion</h1>
         <p className="sub">Chatbot con RAG y agentes de viaje multi-paso.</p>
 
